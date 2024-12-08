@@ -7,13 +7,17 @@ import com.optimagrowth.license.repository.LicenseRepository;
 import com.optimagrowth.license.service.client.OrganizationDiscoveryClient;
 import com.optimagrowth.license.service.client.OrganizationFeignClient;
 import com.optimagrowth.license.service.client.OrganizationRestTemplateClient;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.List;
 import java.util.Locale;
+import java.util.Random;
 import java.util.UUID;
 
 @Service
@@ -101,5 +105,17 @@ public class LicenseService {
         }
 
         return organization;
+    }
+
+    @CircuitBreaker(name = "licenseService")
+    public List<License> getLicensesByOrganization(String organizationId) {
+        randomlyRunLong();
+        return licenseRepository.findByOrganizationId(organizationId);
+    }
+
+    private static void randomlyRunLong() {
+        Random random = new Random();
+        if (random.nextBoolean())
+            throw new HttpServerErrorException(HttpStatus.INTERNAL_SERVER_ERROR, "Http server error");
     }
 }
