@@ -109,11 +109,11 @@ public class LicenseService {
 
     @CircuitBreaker(name = "licenseService")
     public List<License> getLicensesByOrganization(String organizationId) {
-        randomlyRunLong();
+        randomlyThrowException();
         return licenseRepository.findByOrganizationId(organizationId);
     }
 
-    private static void randomlyRunLong() {
+    private static void randomlyThrowException() {
         Random random = new Random();
         if (random.nextBoolean())
             throw new HttpServerErrorException(HttpStatus.INTERNAL_SERVER_ERROR, "Http server error");
