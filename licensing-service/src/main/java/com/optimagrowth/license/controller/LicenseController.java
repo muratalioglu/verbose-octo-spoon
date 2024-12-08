@@ -3,12 +3,9 @@ package com.optimagrowth.license.controller;
 import com.optimagrowth.license.model.License;
 import com.optimagrowth.license.service.LicenseService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.hateoas.Link;
-import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Locale;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
@@ -24,7 +21,7 @@ public class LicenseController {
     public ResponseEntity<License> getLicense(@PathVariable String organizationId,
                                               @PathVariable String licenseId) {
 
-        License license = licenseService.getLicense(licenseId, organizationId);
+        License license = licenseService.getLicense(licenseId, organizationId, "rest");
 
         license.add(
                 linkTo(methodOn(LicenseController.class).getLicense(organizationId, license.getLicenseId())).withSelfRel(),
@@ -34,6 +31,14 @@ public class LicenseController {
         );
 
         return ResponseEntity.ok(license);
+    }
+
+    @GetMapping("/{licenseId}/{clientType}")
+    public ResponseEntity<License> getLicenseWithClient(@PathVariable String organizationId,
+                                                        @PathVariable String licenseId,
+                                                        @PathVariable String clientType) {
+
+        return ResponseEntity.ok(licenseService.getLicense(licenseId, organizationId, clientType));
     }
 
     @PostMapping
