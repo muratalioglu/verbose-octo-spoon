@@ -107,10 +107,18 @@ public class LicenseService {
         return organization;
     }
 
-    @CircuitBreaker(name = "licenseService")
+    @CircuitBreaker(name = "licenseService", fallbackMethod = "getLicensesFallback")
     public List<License> getLicensesByOrganization(String organizationId) {
         randomlyThrowException();
         return licenseRepository.findByOrganizationId(organizationId);
+    }
+
+    private List<License> getLicensesFallback(String organizationId, Throwable t) {
+        License license = new License();
+        license.setLicenseId("0000000-00-00000");
+        license.setOrganizationId(organizationId);
+        license.setProductName("No licensing information available (fallback)");
+        return List.of(license);
     }
 
     private static void randomlyThrowException() {
