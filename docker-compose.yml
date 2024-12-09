@@ -32,7 +32,7 @@ services:
   eurekaserver:
     image: ostock/eurekaserver:0.0.1-SNAPSHOT
     ports:
-      - "8070:8070"
+      - "8761:8761"
     depends_on:
       database:
         condition: service_healthy
