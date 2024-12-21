@@ -24,6 +24,15 @@ spring:
           filters:
             - RewritePath=/organization/(?<path>.*), /$\{path}
 
+        - id: licensing-service-example
+          uri: lb://licensing-service
+
+          predicates:
+            - Path=/licensing/**
+
+          filters:
+            - RewritePath=/licensing/(?<path>.*), /$\{path}
+
 management:
   endpoints:
     enabled-by-default: true
