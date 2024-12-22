@@ -2,7 +2,7 @@ server:
   port: 8761
 spring:
   application:
-    name: eureka-server
+    name: eurekaserver
   cloud:
     config:
       uri: http://localhost:8071

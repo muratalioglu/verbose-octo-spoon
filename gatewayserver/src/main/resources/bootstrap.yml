@@ -6,7 +6,7 @@ spring:
     name: gateway-server
   cloud:
     config:
-      uri: http://localhost:8071
+      uri: http://configserver:8071
     loadbalancer:
       ribbon:
         enabled: false
