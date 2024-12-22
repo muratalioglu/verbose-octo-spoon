@@ -82,22 +82,20 @@ services:
           - "licenseservice"
   organizationservice:
     image: ostock/organization-service:0.0.1-SNAPSHOT
+    ports:
+      - "8081:8081"
     environment:
-      PROFILE: "dev"
-      CONFIGSERVER_URI: "http://configserver:8071"
-      CONFIGSERVER_PORT:   "8071"
-      DATABASESERVER_PORT: "5432"
-      ENCRYPT_KEY:       "IMSYMMETRIC"
+      SPRING_PROFILES_ACTIVE: "dev"
+      SPRING_CLOUD_CONFIG_URI: http://configserver:8071
     depends_on:
       database:
         condition: service_healthy
       configserver:
         condition: service_started
-    ports:
-      - "8081:8081"
     networks:
-      - backend
-
+      backend:
+        aliases:
+          - "gateway"
 networks:
   backend:
     driver: bridge
